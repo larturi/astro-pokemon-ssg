@@ -1,6 +1,4 @@
 ---
-import { ClientRouter } from 'astro:transitions'
-
 interface Props {
   title: string
   image?: string
@@ -28,7 +26,12 @@ const { title, image = '', description = '' } = Astro.props
 
     <title>{title}</title>
 
-    <ClientRouter />
+    <!-- View Transitions -->
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
   </head>
   <body class='bg-slate-900 text-slate-100 m-auto max-w-3xl mt-6'>
     <slot />
