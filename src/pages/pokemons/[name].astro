@@ -1,0 +1,36 @@
+---
+import type { GetStaticPaths } from 'astro'
+import MainLayout from '../../layouts/MainLayout.astro'
+import PokemonCard from '../../components/PokemonCard.astro'
+
+export const getStaticPaths = (() => {
+  return [
+    {
+      params: { name: 'ivysaur' },
+      props: { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' }
+    }
+  ]
+}) satisfies GetStaticPaths
+
+const { name } = Astro.params
+const { url } = Astro.props
+
+const id = url.split('/').at(-2)
+const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`
+---
+
+<MainLayout title='Pockemon Astro SSG | Pokemons'>
+  <section class='pt-10 mx-10 flex flex-col justify-center items-center'>
+    <div>
+      <a class='mb-5 text-blue-500 hover:underline' href='/'>Regresar</a>
+      <h1 class='text-3xl'>{name}</h1>
+    </div>
+
+    <PokemonCard name={name} url={url} />
+
+    <audio controls class='mt-5'>
+      <source src={audioSrc} type='audio/ogg' />
+      Your browser does not support the audio element.
+    </audio>
+  </section>
+</MainLayout>
