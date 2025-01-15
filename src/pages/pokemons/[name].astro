@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro'
+import { Icon } from 'astro-icon/components'
 import type { PokemonListResponse } from '../../interfaces/pokemon-list.response'
 import MainLayout from '../../layouts/MainLayout.astro'
 import PokemonCard from '../../components/PokemonCard.astro'
@@ -30,8 +31,15 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
   image={imageSrc}
 >
   <section class='pt-10 mx-10 flex flex-col justify-center items-center'>
-    <div>
-      <Title isCapitalize>{name}</Title>
+    <div class='flex flex-row'>
+      <div>
+        <Title isCapitalize>{name}</Title>
+      </div>
+
+      <button class='ml-4' id='btn-favorite' data-name={name} data-id={id}>
+        <Icon data-outline name='heart-outline' size={46} />
+        <Icon data-full class='hidden' name='heart-full' size={46} />
+      </button>
     </div>
 
     <PokemonCard name={name} url={url} isBig={true} />
@@ -46,3 +54,55 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     </div>
   </section>
 </MainLayout>
+
+<script>
+  interface FavoritePokemon {
+    name: string
+    id: number
+  }
+
+  const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement
+  const name = btnFavorite?.dataset.name ?? ''
+  const id = btnFavorite?.dataset.id ?? ''
+
+  let favoritesPokemons: FavoritePokemon[] = JSON.parse(
+    localStorage.getItem('favoritesPokemons') ?? '[]'
+  )
+
+  const isFavorite = favoritesPokemons.some((pokemon) => pokemon.name === name)
+
+  const heartOutline = btnFavorite?.querySelector('[data-outline]') as HTMLElement
+  const heartFull = btnFavorite?.querySelector('[data-full]') as HTMLElement
+
+  if (isFavorite) {
+    heartOutline.classList.add('hidden')
+    heartFull.classList.remove('hidden')
+  }
+
+  const toggleFavorite = () => {
+    const isFavorite = favoritesPokemons.some((pokemon) => pokemon.name === name)
+
+    if (isFavorite) {
+      // Remove
+      favoritesPokemons = favoritesPokemons.filter((pokemon) => pokemon.name !== name)
+    } else {
+      // Add
+      favoritesPokemons.push({ id: +id, name })
+    }
+
+    localStorage.setItem('favoritesPokemons', JSON.stringify(favoritesPokemons))
+  }
+
+  btnFavorite?.addEventListener('click', () => {
+    heartOutline.classList.toggle('hidden')
+    heartFull.classList.toggle('hidden')
+
+    toggleFavorite()
+  })
+</script>
+
+<style>
+  #btn-favorite {
+    @apply hover:animate-pulse;
+  }
+</style>

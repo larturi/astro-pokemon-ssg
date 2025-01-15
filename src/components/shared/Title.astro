@@ -6,7 +6,7 @@ interface Props {
 const { isCapitalize = false } = Astro.props
 ---
 
-<h1 class:list={['text-4xl', { capitalize: isCapitalize }]}>
+<h1 class:list={['text-2xl md:text-4xl', { capitalize: isCapitalize }]}>
   <slot />
 </h1>
 
