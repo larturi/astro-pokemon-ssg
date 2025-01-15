@@ -11,7 +11,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   return paginate(results, { pageSize: 20 })
 }) satisfies GetStaticPaths
 
-const title = 'Pockemon Astro SSG | Home'
+const title = 'Pokemon Astro SSG | Home'
 
 const { page } = Astro.props
 ---

@@ -1,0 +1,35 @@
+---
+const links = [
+  { href: '/', label: 'Listado' },
+  { href: '/favorites', label: 'Favoritos' }
+]
+
+const currentPathName = Astro.url.pathname
+---
+
+<nav class='shadow bg-slate-900'>
+  <div
+    class='container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300'
+  >
+    {
+      links.map(({ href, label }) => (
+        <div>
+          <a href={href} class='text-gray-200 mx-1.5 sm:mx-6'>
+            {label}
+          </a>
+          {href === currentPathName ? (
+            <div transition:name='menu-underline' class='active' />
+          ) : (
+            <div transition:name='menu-underline' class='border-b-2 border-transparent' />
+          )}
+        </div>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  .active {
+    @apply border-b-2 border-blue-500 mx-5;
+  }
+</style>
