@@ -9,9 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/solid-js": "^5.0.3",
     "@astrojs/tailwind": "^5.1.4",
+    "add": "^2.0.6",
     "astro": "^5.1.5",
     "astro-icon": "^1.1.5",
+    "solid": "^0.2.1",
+    "solid-js": "^1.9.4",
     "tailwindcss": "^3.4.17"
   }
 }

@@ -1,0 +1,23 @@
+---
+import { Counter } from '@components/Counter'
+import Title from '@components/shared/Title.astro'
+import MainLayout from '@layouts/MainLayout.astro'
+
+const counterValue = 20
+---
+
+<MainLayout title='Pokemon Astro SSG | Islas'>
+  <Title>Islas</Title>
+
+  <!-- Div vacio para que la isla quede debajo y se cargue el js solo cuando se scrollea -->
+  <div style={{ height: '2000px', backgroundColor: 'red', opacity: 0.4 }}></div>
+
+  <Counter
+    transition:persist='counter'
+    transition:persist-props
+    client:visible
+    initValue={counterValue}
+  />
+
+  <div style={{ height: '60px' }}></div>
+</MainLayout>
