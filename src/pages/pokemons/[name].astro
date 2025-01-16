@@ -2,9 +2,9 @@
 import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
 import type { PokemonListResponse } from '../../interfaces/pokemon-list.response'
-import MainLayout from '../../layouts/MainLayout.astro'
-import PokemonCard from '../../components/PokemonCard.astro'
+import MainLayout from '@layouts/MainLayout.astro'
 import Title from '@components/shared/Title.astro'
+import PokemonCard from '@components/Pokemons/PokemonCard.astro'
 
 export const getStaticPaths = (async () => {
   const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
@@ -56,49 +56,57 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
-  interface FavoritePokemon {
-    name: string
-    id: number
-  }
+  import type { FavoritePokemon } from '@interfaces/favorite-pokemon'
 
-  const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement
-  const name = btnFavorite?.dataset.name ?? ''
-  const id = btnFavorite?.dataset.id ?? ''
+  const handlePageLoad = () => {
+    let favoritePokemons: FavoritePokemon[] = JSON.parse(
+      localStorage.getItem('favoritesPokemons') ?? '[]'
+    )
 
-  let favoritesPokemons: FavoritePokemon[] = JSON.parse(
-    localStorage.getItem('favoritesPokemons') ?? '[]'
-  )
+    const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement
 
-  const isFavorite = favoritesPokemons.some((pokemon) => pokemon.name === name)
+    if (!btnFavorite) return
 
-  const heartOutline = btnFavorite?.querySelector('[data-outline]') as HTMLElement
-  const heartFull = btnFavorite?.querySelector('[data-full]') as HTMLElement
+    const name = btnFavorite.dataset.name ?? ''
+    const id = btnFavorite.dataset.id ?? ''
+    const isFavorite = favoritePokemons.some((fav) => fav.name === name)
 
-  if (isFavorite) {
-    heartOutline.classList.add('hidden')
-    heartFull.classList.remove('hidden')
-  }
+    const heartOutline = btnFavorite.querySelector('[data-outline]') as HTMLElement
 
-  const toggleFavorite = () => {
-    const isFavorite = favoritesPokemons.some((pokemon) => pokemon.name === name)
+    const heartFull = btnFavorite.querySelector('[data-full]') as HTMLElement
 
+    // Hagan la función para mostrar o ocultar el corazón lleno
     if (isFavorite) {
-      // Remove
-      favoritesPokemons = favoritesPokemons.filter((pokemon) => pokemon.name !== name)
-    } else {
-      // Add
-      favoritesPokemons.push({ id: +id, name })
+      heartOutline.classList.add('hidden')
+      heartFull.classList.remove('hidden')
     }
 
-    localStorage.setItem('favoritesPokemons', JSON.stringify(favoritesPokemons))
+    const toggleFavorite = () => {
+      const isFavorite = favoritePokemons.some((fav) => fav.name === name)
+
+      if (isFavorite) {
+        // Remover
+        favoritePokemons = favoritePokemons.filter((fav) => fav.name !== name)
+      } else {
+        // Agregar
+        favoritePokemons.push({
+          id: +id,
+          name: name
+        })
+      }
+
+      localStorage.setItem('favoritesPokemons', JSON.stringify(favoritePokemons))
+    }
+
+    btnFavorite.addEventListener('click', () => {
+      heartOutline.classList.toggle('hidden')
+      heartFull.classList.toggle('hidden')
+
+      toggleFavorite()
+    })
   }
 
-  btnFavorite?.addEventListener('click', () => {
-    heartOutline.classList.toggle('hidden')
-    heartFull.classList.toggle('hidden')
-
-    toggleFavorite()
-  })
+  document.addEventListener('astro:page-load', handlePageLoad)
 </script>
 
 <style>
