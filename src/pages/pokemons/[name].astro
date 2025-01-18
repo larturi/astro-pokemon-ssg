@@ -57,10 +57,11 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 
 <script>
   import type { FavoritePokemon } from '@interfaces/favorite-pokemon'
+  import { localStorageKeyPokemons } from 'src/constants'
 
   const handlePageLoad = () => {
     let favoritePokemons: FavoritePokemon[] = JSON.parse(
-      localStorage.getItem('favoritesPokemons') ?? '[]'
+      localStorage.getItem(localStorageKeyPokemons) ?? '[]'
     )
 
     const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement
@@ -95,7 +96,7 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
         })
       }
 
-      localStorage.setItem('favoritesPokemons', JSON.stringify(favoritePokemons))
+      localStorage.setItem(localStorageKeyPokemons, JSON.stringify(favoritePokemons))
     }
 
     btnFavorite.addEventListener('click', () => {
